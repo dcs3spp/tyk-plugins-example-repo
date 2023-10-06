@@ -13,6 +13,7 @@ Once you have a license, Run these commands:
 2. `up.sh`
 
 hint: you may need to give the executable permissions if you have an error:
+
 ```bash
 chmod +x up.sh
 ```
@@ -99,3 +100,60 @@ volumes:
    - ./certs/tyk-gateway-certificate.pem/:/opt/tyk-gateway/certs/tyk-gateway-certificate.pem
    - ./certs/tyk-gateway-private-key.pem/:/opt/tyk-gateway/certs/tyk-gateway-private-key.pem
 ```
+
+## Plugins
+
+This repository contains a basic example of a plugin in the following languages:
+
+- GoLang 1.19
+- JVM
+- Python
+
+It does not target gRPC.
+
+The plugin logs to the console when each hook is activated.
+
+### Overview
+
+A _Makefile_ has been created to start a Tyk Self Managed docker-compose stack a specific language
+example.
+
+The docker-compose stack consists of an Nginx instance to serve signed plugin
+bundles. To generate the RSA key pairs enter the following command from within the
+root of the repository:
+
+```console
+make gen-keys
+```
+
+N.B the data storage volume is currently shared across docker-compose stacks.
+
+Subsequently, for each language it will be necessary to update the plugin bundle
+for the API.
+
+There is a _plugins_ folder that contains a _logger_ plugin, with subfolders for:
+
+- Go
+- Javascript
+- Python
+
+Each subfolder has a _Makefile_ for building and bundling the plugin as a signed zip file.
+Please refer to the README file within each subfolder for an overview of the
+specific make rules provide for each language.
+
+The following table summarises how to start the plugin
+
+|----Language----|----rule----|----description----|
+| Go | go-up | Start Go plugin docker-compose stack |
+| | go-down | Stop Go plugin docker-compose stack |
+| | go-logs | Shows logs for Go docker-compose stack |
+| | go-restart | Restart services for Go docker-compose stack |
+| JS | js-up | Start JS Go plugin docker-compose stack |
+| | js-down | Stop JS plugin docker-compose stack |
+| | js-logs | Show logs for JS docker-compose stack |
+| | js-up | Start JS plugin docker-compose stack |
+| | js-restart | Restart docker-compose services for JS docker-compose stack |
+| Python | python-up | Start Python docker-compose stack |
+| | python-down | Stop Python docker-compose stack |
+| | python-logs | Show logs for Python docker-compose stack |
+| | [ython-restart | Restart services for Python docker-compose stack |
