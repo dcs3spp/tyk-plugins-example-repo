@@ -2,12 +2,11 @@
 
 ## What I have done so far?
 
-1. Used the docker pro demo and figured out how to use the httpbin API. *my_custom_key* needs to be specified in the *Authorization* header. This key needs to be documented!
+1. Used the docker pro demo and figured out how to use the httpbin API. _my_custom_key_ needs to be specified in the _Authorization_ header. This key needs to be documented!
 2. Figured out how to bundle a plugin. I generated a manifest.json file and bundled the plugin files and the manifest into a bundle zip file. This took a long time! There is a docker utlity that Tyk provides to build a plugin as seen in the Makefile of this repo. The plugin has to built using the same version of Go that Tyk was compiled with. Also, the README for the Tyk repository does not state that Tyk 1.19 is used to build Tyk.
 3. Added a nginx docker-compose service that will serve the bundle files from the plugins folder. I just want this to be a simple nginx http server for now. This is only a getting started, tutorial. It is not intended to be complex. Keep it simple and for development environment use initially.
 4. Configured the Dashboard API to read the generated bundle for the plugin from the http server
 5. Ran plugins for Go, Python and JVM and generated log ouput.
-
 
 ## What I want to do next?
 
@@ -41,39 +40,40 @@ This process worked but what made the difference? Was it it the docker platform 
 ## What next?
 
 - Determine if it was platform that made the difference. Remove platform from the docker-compose stack in GW service
-- Determine if it was go.mod dependencies from go get for GW. Backup the go.mod and then remove the deps and try with platform included 
+- Determine if it was go.mod dependencies from go get for GW. Backup the go.mod and then remove the deps and try with platform included
 
 The plugin compiler only builds on amd64??? How to build on arm64
 
-## GOLang saga
+## GOLang
 
 docker-compose services run in linux arm64 on macOS
 
 The bundle build should be targeted for Tyk GW docker-compose architecture type. I suspect that, that is linux/arm64 5.1.2. This was the case.
 The plugins docs should give an example of GOARCH and GOOS.
 
-SO:
+So:
+
 1. Build the module as a plugin using the docker helper cli
 2. Use the bundler to create the bundle
 3. Update the API httpbin to ref bundle
 4. Try and send a request and see if the plugin logs
 
-If I moved the so file into a build folder and reference it, it failed. How do i specify a relative path in a manifest.json file?
+If I moved the so file into a build folder and reference it, it failed. How do I specify a relative path in a manifest.json file?
 
-The gateway downloads and extracts the bundle in the middleware folder by default. Each hook in the manifest file needs to have a name and path specfified. Tyk GW automatically expands filename in the path to be filename_<version>_<arch>.so. This needs to be made clear. Devx experience for new users.
+The gateway downloads and extracts the bundle in the middleware folder by default. Each hook in the manifest file needs to have a name and path specfified. Tyk GW automatically expands filename in the path to be filename*<version>*<arch>.so. This needs to be made clear. Devx experience for new users.
 
-## Python saga
+## Python
 
 There is no Python module available to install from Pip. The Python modules are integrated with Tyk Gateway source code
 This degrades the DevX experience for autocomplete when using editors like PyCharm, VSCode, nvim, vim etc.
 
 Could not get auth_check logging displayed?
 
-## JVM saga
+## JVM
 
 There is one plugin per filename. The filename has to be the same name as the middleware variable.
 
-Pre and post middleware were logged, but response middleware not logged. Receive a 500 internal server error with no further 
+Pre and post middleware were logged, but response middleware not logged. Receive a 500 internal server error with no further
 message as to why the error occurred in API debugger or log browser. Only get Middleware error or internal server error.
 
 Which container do you inspect to troubleshoot JVM middleware errors? It is not logged in GW or Dashboard container.
@@ -88,12 +88,9 @@ Mention is also made of using JVM middleware for webhook/event handlers. Is ther
 
 - Typescript supported?
 - System API for JVM documented?
-- Exmaple usage of JVM event handlers?
+- Example usage of JVM event handlers?
 
-## Bundle Probles
+## Bundle Problems I Encountered
 
 - Could only get RSA keys to work with bundler, not ECDSA. The key type and process for generating needs documenting.
 
-## Appendix
-
-TYK_DB_LICENSEKEY=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbGxvd2VkX25vZGVzIjoiZDBlN2M4YjgtMzdmZi00ZWUxLTYwMTEtY2ViZWQ5OWJhMWQwLGYxZTQ1NDA2LTgwN2UtNGNlNy03OWVhLThjZGVhODI1MzhlNCw0ZGY2YWM5Ny1iMDYwLTQ0YTktNWI4OC0yYzM5ZWE3YTk2M2IsYzI0M2JkMGMtYmJkZi00Y2I4LTc1NDQtM2MyN2NmYWIxYzZlLGQ3ZWY1NTRiLTc0YzItNGFiNy03OTE1LWJjODU4YzFlNjQ5NSxiYjFiNGYwYy05ZDQyLTRhZWMtNmRlZi03NjA2OWU4NTc0OGQsZGU5ZmZiYmEtYjdkNy00Y2M3LTcyM2EtOGFlNDA3NDA5YTY2LDE1MDRiM2UwLTQ4M2QtNDE3NS01OTkzLWM4ZmYyNzIxNzViMCwzYTE2MDMyZS05MjJhLTRiYWEtNmUyOS1iMmE2OWJkZjZkNTcsZmQ3MzMwNDUtZGQxMi00OTBmLTQ0NmMtMDdkYzIyNTYwMTdlIiwiZXhwIjoxNjk3MzI3OTk5LCJpYXQiOjE2OTQ3MDg0MzEsIm93bmVyIjoiNjFjY2U2MmMxMjFjYTEwMDAxOGJiMTkwIiwic2NvcGUiOiJtdWx0aV90ZWFtLHJiYWMsZ3JhcGgsZmVkZXJhdGlvbiIsInYiOiIyIn0.JezrzCQUNswDQDVsqg4vPTQssSog0Y9_w2hedT1KDwrEBqrcM9PCHFIKIsc1Ba_moPxsY_ICvUwdhIVO5rF2izeteoN8MLqk9ZMaflBlheieYMnmL1cQ4xjS2uaSRr6pKHhcPtmlMzezfcMqHI-BtCHh9ZSP-7AC_8-Kcpm3bMtK21_35s0j3M04FqhlxIKrLc4vFepVqZwAX2srS2DdSby8SIylkJhGHvOF59KgG2qKSMk6X1-x7ITKA6ixjNPJ8edubQFXqIh6K260UcoEK1wRg1W6mSElgssjV7BfZUNwHWqJW9sdsS3-YX_lL2fVwrajrh9i24Zq4vyr7vIuzg
