@@ -1,0 +1,43 @@
+{
+  "file_list": [
+    "logger-plugin_v5.1.2_linux_arm64.so"
+  ],
+  "custom_middleware": {
+    "pre": [
+      {
+        "name": "PreHook",
+        "path": "logger-plugin.so"
+      }
+    ],
+    "post": [
+      {
+        "name": "PostHook",
+        "path": "logger-plugin.so"
+      }
+    ],
+    "post_key_auth": [
+      {
+        "name": "PostKeyAuthHook",
+        "path": "logger-plugin.so"
+      }
+    ],
+    "auth_check": {
+      "name": "AuthCheckHook",
+      "path": "logger-plugin.so"
+    },
+    "response": [
+      {
+        "name": "ResponseHook",
+        "path": "logger-plugin.so"
+      }
+    ],
+    "driver": "goplugin",
+    "id_extractor": {
+      "extract_from": "header",
+      "extract_with": "value",
+      "extractor_config": {
+          "header_name": "Authorization"
+      }
+    }
+  }
+}

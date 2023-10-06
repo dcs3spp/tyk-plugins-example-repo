@@ -1,0 +1,26 @@
+{
+    "file_list": [
+        "preMiddleware.js",
+        "postMiddleware.js"
+    ],
+    "custom_middleware": {
+        "pre": [
+            {
+                "name": "preMiddleware",
+                "path": "preMiddleware.js"
+            }
+        ],
+        "post": [
+            {
+                "name": "postMiddleware",
+                "path": "postMiddleware.js"
+            }
+        ],
+        "driver": "otto",
+        "id_extractor": {
+          "extract_from": "",
+          "extract_with": "",
+          "extractor_config": {}
+        }
+      }
+}

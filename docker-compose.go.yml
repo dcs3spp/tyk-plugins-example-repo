@@ -1,0 +1,107 @@
+version: '3.9'
+services:
+  tyk-webserver:
+    image: nginx:alpine
+    container_name: tyk-webserver
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "3080:80"
+    volumes:
+      - ./confs/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./plugins:/plugins
+    networks:
+      - tyk
+
+  tyk-dashboard:
+    image: tykio/tyk-dashboard:v5.1.2
+    container_name: tyk-dashboard
+    environment:
+      - TYK_DB_STORAGE_MAIN_TYPE=postgres
+      - TYK_DB_STORAGE_MAIN_CONNECTIONSTRING=user=postgres password=topsecretpassword host=tyk-postgres port=5432 database=tyk_analytics
+    depends_on:
+      tyk-postgres:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./confs/tyk_analytics.env
+    networks:
+      - tyk
+
+  tyk-ent-portal:
+    image: tykio/portal:v1.5.0
+    command: --bootstrap
+    ports:
+      - 3001:3001
+    env_file:
+      - ./confs/tyk_portal.env
+    networks:
+      - tyk
+
+  tyk-gateway:
+    image: tykio/tyk-gateway:v5.1.2
+    container_name: tyk-gateway
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./confs/tyk.env
+    depends_on:
+      tyk-webserver:
+        condition: service_healthy
+    volumes:
+      - ./plugins:/plugins
+      - ./confs/keys:/keys
+    networks:
+      - tyk
+
+  tyk-pump:
+    image: tykio/tyk-pump-docker-pub:v1.8
+    container_name: tyk-pump
+    env_file:
+      - ./confs/pump.env
+      - ./confs/pump.postgres.env
+    depends_on:
+      tyk-postgres:
+        condition: service_healthy
+    networks:
+      - tyk
+
+  tyk-redis:
+    image: redis
+    container_name: tyk-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - tyk
+
+  tyk-postgres:
+    image: postgres:latest
+    container_name: tyk-postgres
+    environment:
+      - POSTGRES_DB=tyk_analytics
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=topsecretpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tyk
+  
+volumes:
+  redis-data:
+  postgres-data:
+
+networks:
+  tyk:
