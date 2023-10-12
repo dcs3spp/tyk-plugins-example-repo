@@ -26,6 +26,9 @@ This will build an API that is protected by the following authentication token:
 The repository extends the [docker-pro-demo]https://github.com/TykTechnologies/tyk-pro-docker-demo) repository.
 Further advanced configuration with MongoDB, PostgreSQL can be found there.
 
+An RSA key pair will be generated and stored in the _confs/keys_ folder. These can
+be used to sign plugin bundles.
+
 ## Plugins
 
 This repository contains a basic example of a plugin in the following languages:
@@ -50,6 +53,9 @@ root of the repository:
 ```console
 make gen-keys
 ```
+
+Alternatively run the command up.sh to install the necessary prerequisites if
+running for the first time. This script will generate the keys.
 
 N.B the data storage volume is currently shared across docker-compose stacks.
 
