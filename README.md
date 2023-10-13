@@ -6,7 +6,7 @@
 
 - [Docker](https://docs.docker.com/get-docker/)
 
-Once you have a license, Run these commands:
+Once you have a license, run these commands:
 
 1. `git clone https://github.com/TykTechnologies/tyk-pro-docker-demo && cd tyk-pro-docker-demo`
 
@@ -23,7 +23,7 @@ Then check the terminal output to log in with your created user.
 This will build an API that is protected by the following authentication token:
 `my_custom_key`
 
-The repository extends the [docker-pro-demo]https://github.com/TykTechnologies/tyk-pro-docker-demo) repository.
+The repository extends the [docker-pro-demo](https://github.com/TykTechnologies/tyk-pro-docker-demo) repository.
 Further advanced configuration with MongoDB, PostgreSQL can be found there.
 
 An RSA key pair will be generated and stored in the _confs/keys_ folder. These can
@@ -43,8 +43,8 @@ The plugin logs to the console when each hook is activated.
 
 ### Overview
 
-A _Makefile_ has been created to start a Tyk Self Managed docker-compose stack a specific language
-example.
+A _Makefile_ has been created to start a Tyk Self Managed docker-compose stack for each
+specific language.
 
 The docker-compose stack consists of an Nginx instance to serve signed plugin
 bundles. To generate the RSA key pairs enter the following command from within the
@@ -54,8 +54,8 @@ root of the repository:
 make gen-keys
 ```
 
-Alternatively run the command up.sh to install the necessary prerequisites if
-running for the first time. This script will generate the keys.
+Alternatively if you have ran the _up.sh_ command to setup the repository then
+the keys will have been generated for you in the _confs/keys_ folder.
 
 N.B the data storage volume is currently shared across docker-compose stacks.
 
