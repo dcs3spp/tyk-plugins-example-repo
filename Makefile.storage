@@ -1,0 +1,9 @@
+mysql-down:
+	docker-compose -f docker-compose.storage.yml down
+mysql-up:
+	docker-compose -f docker-compose.storage.yml up tyk-mysql -d
+down:
+	docker-compose -f docker-compose.storage.yml down
+up:
+	docker-compose -f docker-compose.storage.yml up -d
+
